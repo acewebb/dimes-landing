@@ -1,26 +1,415 @@
 @import "tailwindcss";
 
+/* ============================================
+   DIMES BRAND DESIGN TOKENS
+   Source of truth: Dimes_Brand_Guidelines_v1
+   ============================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Phosphor Amber Palette */
+  --dimes-hot-core: #FFD460;
+  --dimes-amber: #FFB627;
+  --dimes-deep-edge: #E8890B;
+  --dimes-ember-bloom: #FF6B00;
+
+  /* Backdrop & Neutrals */
+  --dimes-void: #000000;
+  --dimes-charcoal: #1A1A1A;
+  --dimes-smoke: #2E2E2E;
+  --dimes-cream: #F5EFE0;
+  --dimes-dim-amber: #8B5A00;
+
+  /* Semantic (use sparingly) */
+  --dimes-green: #39FF14;
+  --dimes-red: #E63946;
+  --dimes-blue: #00B4D8;
+
+  /* Phosphor bloom shadow presets */
+  --glow-sm: 0 0 8px rgba(255, 182, 39, 0.4), 0 0 16px rgba(255, 182, 39, 0.2);
+  --glow-md: 0 0 12px rgba(255, 182, 39, 0.5), 0 0 32px rgba(255, 182, 39, 0.25), 0 0 64px rgba(255, 107, 0, 0.15);
+  --glow-lg: 0 0 16px rgba(255, 182, 39, 0.6), 0 0 48px rgba(255, 182, 39, 0.3), 0 0 96px rgba(255, 107, 0, 0.2), 0 0 128px rgba(255, 107, 0, 0.1);
+  --glow-text: 0 0 8px rgba(255, 182, 39, 0.8), 0 0 24px rgba(255, 182, 39, 0.4), 0 0 48px rgba(255, 107, 0, 0.2);
 }
 
+/* Tailwind v4 Theme Extensions */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-hot-core: #FFD460;
+  --color-amber: #FFB627;
+  --color-deep-edge: #E8890B;
+  --color-ember-bloom: #FF6B00;
+  --color-void: #000000;
+  --color-charcoal: #1A1A1A;
+  --color-smoke: #2E2E2E;
+  --color-cream: #F5EFE0;
+  --color-dim-amber: #8B5A00;
+  --color-payout-green: #39FF14;
+  --color-loss-red: #E63946;
+  --color-signal-blue: #00B4D8;
+
+  --font-display: var(--font-monoton);
+  --font-headline: var(--font-anton);
+  --font-body: var(--font-inter);
+  --font-numeric: var(--font-jetbrains-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--dimes-void);
+  color: var(--dimes-cream);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+::selection {
+  background: rgba(255, 182, 39, 0.3);
+  color: var(--dimes-hot-core);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--dimes-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--dimes-smoke);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dimes-dim-amber);
+}
+
+/* ============================================
+   CRT SCANLINE OVERLAY
+   Brand Guidelines §5.1
+   1-2px lines at 45-55% opacity, every 3-4px
+   ============================================ */
+
+.crt-scanlines {
+  position: relative;
+}
+
+.crt-scanlines::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: multiply;
+}
+
+/* ============================================
+   VHS GRAIN OVERLAY
+   Brand Guidelines §5.2
+   8-12% opacity, monochromatic, animated
+   ============================================ */
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -25%); }
+  40% { transform: translate(-5%, 25%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
+}
+
+.grain-overlay {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 9997;
+  animation: grain 6s steps(10) infinite;
+  mix-blend-mode: soft-light;
+}
+
+/* ============================================
+   VIGNETTE OVERLAY
+   Brand Guidelines §5.5
+   0% center, 25-35% corners
+   ============================================ */
+
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  pointer-events: none;
+  z-index: 9996;
+}
+
+/* ============================================
+   PHOSPHOR BLOOM UTILITIES
+   Brand Guidelines §5.3
+   ============================================ */
+
+.phosphor-bloom {
+  filter: brightness(1.05);
+  text-shadow: var(--glow-text);
+}
+
+.phosphor-bloom-box {
+  box-shadow: var(--glow-md);
+}
+
+/* ============================================
+   CHROMATIC ABERRATION
+   Brand Guidelines §5.4
+   2-3px red/cyan offset
+   ============================================ */
+
+.chromatic-aberration {
+  position: relative;
+}
+
+.chromatic-aberration::before,
+.chromatic-aberration::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.chromatic-aberration::before {
+  color: rgba(255, 0, 0, 0.15);
+  transform: translate(-2px, 0);
+  z-index: -1;
+}
+
+.chromatic-aberration::after {
+  color: rgba(0, 255, 255, 0.15);
+  transform: translate(2px, 0);
+  z-index: -1;
+}
+
+/* ============================================
+   CRT WARM-UP ANIMATION
+   Scan-line sweep + brightness bloom
+   ============================================ */
+
+@keyframes crt-warmup {
+  0% {
+    opacity: 0;
+    filter: brightness(0);
+  }
+  20% {
+    opacity: 0.3;
+    filter: brightness(0.3);
+  }
+  40% {
+    opacity: 0.6;
+    filter: brightness(1.4);
+  }
+  60% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+  80% {
+    opacity: 0.95;
+    filter: brightness(1.05);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+@keyframes scanline-sweep {
+  0% {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.crt-warmup {
+  animation: crt-warmup 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* ============================================
+   AMBER GLOW PULSE
+   Brand Guidelines §5.3 — required on logo & CTAs
+   ============================================ */
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 182, 39, 0.5),
+                0 0 32px rgba(255, 182, 39, 0.2),
+                0 0 64px rgba(255, 107, 0, 0.1);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(255, 182, 39, 0.7),
+                0 0 48px rgba(255, 182, 39, 0.35),
+                0 0 80px rgba(255, 107, 0, 0.2);
+    filter: brightness(1.08);
+  }
+}
+
+@keyframes text-glow-pulse {
+  0%, 100% {
+    text-shadow: 0 0 8px rgba(255, 182, 39, 0.6),
+                 0 0 24px rgba(255, 182, 39, 0.3),
+                 0 0 48px rgba(255, 107, 0, 0.15);
+  }
+  50% {
+    text-shadow: 0 0 12px rgba(255, 182, 39, 0.9),
+                 0 0 36px rgba(255, 182, 39, 0.5),
+                 0 0 64px rgba(255, 107, 0, 0.25);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.text-glow-pulse {
+  animation: text-glow-pulse 3s ease-in-out infinite;
+}
+
+/* ============================================
+   TYPEWRITER CURSOR
+   ============================================ */
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: var(--dimes-amber);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: cursor-blink 0.6s step-end infinite;
+  box-shadow: 0 0 8px rgba(255, 182, 39, 0.8);
+}
+
+/* ============================================
+   SCROLL INDICATOR
+   ============================================ */
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+.scroll-indicator {
+  animation: scroll-bounce 2s ease-in-out infinite;
+}
+
+/* ============================================
+   HOVER GLOW — all interactive elements
+   ============================================ */
+
+.hover-glow {
+  transition: box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: var(--glow-md);
+  filter: brightness(1.1);
+}
+
+/* ============================================
+   LABEL STYLE
+   Brand Guidelines §4.5
+   Inter Semibold, ALL CAPS, wide tracking
+   ============================================ */
+
+.dimes-label {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+
+/* ============================================
+   SECTION DIVIDER — scan-line wipe
+   ============================================ */
+
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--dimes-dim-amber) 20%,
+    var(--dimes-amber) 50%,
+    var(--dimes-dim-amber) 80%,
+    transparent 100%
+  );
+  opacity: 0.4;
+}
+
+/* ============================================
+   MOBILE PERFORMANCE OVERRIDES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .crt-scanlines::after {
+    opacity: 0.4;
+  }
+
+  .grain-overlay {
+    opacity: 0.05;
+    animation: none;
+  }
 }
