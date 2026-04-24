@@ -60,12 +60,19 @@ export async function POST(request: NextRequest) {
       addRandomSuffix: false,
     });
 
-    const entries = await getEntries();
+    // Don't let a failed count block the success response
+    let count = 0;
+    try {
+      const entries = await getEntries();
+      count = entries.length;
+    } catch {
+      // Count is nice-to-have, not critical
+    }
 
     return NextResponse.json({
       success: true,
       message: "You're in!",
-      count: entries.length,
+      count,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
