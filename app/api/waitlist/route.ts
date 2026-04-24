@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     };
 
     await put(blobPath, JSON.stringify(entry), {
-      access: "public",
+      access: "private",
       addRandomSuffix: false,
     });
 
