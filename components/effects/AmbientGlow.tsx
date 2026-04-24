@@ -1,17 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 interface AmbientGlowProps {
-  /** Position from top as percentage */
   top?: string;
-  /** Position from left as percentage */
   left?: string;
-  /** Size of the glow orb */
   size?: "sm" | "md" | "lg" | "xl";
-  /** Color variant */
   color?: "amber" | "ember" | "dim";
-  /** Animation delay */
   delay?: number;
   className?: string;
 }
@@ -30,8 +23,8 @@ const colorMap = {
 };
 
 /**
- * Floating ambient glow orb
- * Creates atmospheric depth with subtle movement.
+ * Ambient glow orb — now pure CSS for performance.
+ * No Framer Motion infinite loops eating up JS frames.
  */
 export default function AmbientGlow({
   top = "50%",
@@ -42,25 +35,14 @@ export default function AmbientGlow({
   className = "",
 }: AmbientGlowProps) {
   return (
-    <motion.div
+    <div
       className={`absolute rounded-full pointer-events-none blur-3xl ${sizeMap[size]} ${className}`}
       style={{
         top,
         left,
         transform: "translate(-50%, -50%)",
         background: `radial-gradient(circle, ${colorMap[color]} 0%, transparent 70%)`,
-      }}
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{
-        opacity: [0, 1, 0.7, 1],
-        scale: [0.8, 1, 1.05, 1],
-      }}
-      transition={{
-        duration: 6,
-        delay,
-        repeat: Infinity,
-        repeatType: "reverse",
-        ease: "easeInOut",
+        animation: `ambient-pulse 8s ease-in-out ${delay}s infinite alternate`,
       }}
       aria-hidden="true"
     />

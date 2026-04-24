@@ -400,6 +400,15 @@ body {
 }
 
 /* ============================================
+   AMBIENT GLOW PULSE — CSS-based for performance
+   ============================================ */
+
+@keyframes ambient-pulse {
+  0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* ============================================
    MOBILE PERFORMANCE OVERRIDES
    ============================================ */
 
@@ -410,6 +419,20 @@ body {
 
   .grain-overlay {
     opacity: 0.05;
+    animation: none;
+  }
+
+  @keyframes ambient-pulse {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .grain-overlay,
+  .scroll-indicator,
+  .glow-pulse,
+  .text-glow-pulse {
     animation: none;
   }
 }

@@ -1,19 +1,20 @@
+import dynamic from "next/dynamic";
 import Hero from "@/components/Hero";
-import HowItWorks from "@/components/HowItWorks";
-import AppShowcase from "@/components/AppShowcase";
-import Features from "@/components/Features";
-import SocialProof from "@/components/SocialProof";
-import WaitlistCTA from "@/components/WaitlistCTA";
-import Footer from "@/components/Footer";
 import GrainOverlay from "@/components/effects/GrainOverlay";
+
+// Lazy-load below-fold sections — only load when user scrolls near them
+const HowItWorks = dynamic(() => import("@/components/HowItWorks"));
+const AppShowcase = dynamic(() => import("@/components/AppShowcase"));
+const Features = dynamic(() => import("@/components/Features"));
+const SocialProof = dynamic(() => import("@/components/SocialProof"));
+const WaitlistCTA = dynamic(() => import("@/components/WaitlistCTA"));
+const Footer = dynamic(() => import("@/components/Footer"));
 
 export default function Home() {
   return (
     <main className="relative">
-      {/* Global CRT effects layer */}
       <GrainOverlay />
 
-      {/* Page sections */}
       <Hero />
 
       <div className="section-divider" />

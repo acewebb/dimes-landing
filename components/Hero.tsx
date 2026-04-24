@@ -1,9 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { heroSequence, easings } from "@/lib/animations";
+import { easings } from "@/lib/animations";
 import TypewriterText from "@/components/ui/TypewriterText";
-import GlowButton from "@/components/ui/GlowButton";
+import WaitlistForm from "@/components/ui/WaitlistForm";
 import AmbientGlow from "@/components/effects/AmbientGlow";
 import { useState, useRef, useCallback } from "react";
 
@@ -20,10 +20,6 @@ export default function Hero() {
   const handleVideoEnd = useCallback(() => {
     setVideoEnded(true);
   }, []);
-
-  const scrollToWaitlist = () => {
-    document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -61,7 +57,7 @@ export default function Hero() {
       </AnimatePresence>
 
       {/* ===== PHASE 2: Static Hero (always rendered, revealed when video fades) ===== */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pb-16">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full flex-1 px-6 pb-24">
         {/* Ambient glow orbs */}
         <AmbientGlow top="30%" left="50%" size="xl" color="amber" delay={0.5} />
         <AmbientGlow top="60%" left="30%" size="lg" color="ember" delay={1.5} />
@@ -129,17 +125,23 @@ export default function Hero() {
             </motion.p>
           )}
 
-          {/* CTA */}
+          {/* Waitlist Form */}
           {videoEnded && (
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.6, delay: 2.6, ease: easings.enter }}
-              className="relative z-20"
+              className="relative z-20 w-full"
             >
-              <GlowButton onClick={scrollToWaitlist} pulse>
-                Get Early Access
-              </GlowButton>
+              <WaitlistForm source="hero" />
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 3.0, duration: 0.5 }}
+                className="text-cream/25 text-xs mt-4 text-center"
+              >
+                No spam. Just your invite when we launch.
+              </motion.p>
             </motion.div>
           )}
         </div>
@@ -150,7 +152,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 3.2 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
           >
             <span className="dimes-label text-dim-amber text-[10px]">Scroll</span>
             <motion.svg
