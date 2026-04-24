@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     };
 
     await put(blobPath, JSON.stringify(entry), {
-      access: "private",
+      access: "public",
       addRandomSuffix: false,
     });
 
@@ -67,7 +67,8 @@ export async function POST(request: NextRequest) {
       message: "You're in!",
       count: entries.length,
     });
-  } catch {
+  } catch (err) {
+    console.error("Waitlist POST error:", err);
     return NextResponse.json(
       { error: "Something went wrong. Try again." },
       { status: 500 }
