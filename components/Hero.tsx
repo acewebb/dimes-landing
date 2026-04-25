@@ -73,7 +73,7 @@ export default function Hero() {
               className="mb-5 md:mb-6"
             >
               <div
-                className="relative overflow-hidden w-[460px] md:w-[600px] lg:w-[750px]"
+                className="relative overflow-hidden w-full max-w-[460px] md:max-w-[600px] lg:max-w-[750px]"
                 style={{ marginTop: "-10%" }}
               >
                 <div
@@ -102,7 +102,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.0 }}
-              className="relative z-20 font-headline text-4xl md:text-6xl lg:text-7xl uppercase text-cream mb-5 md:mb-6"
+              className="relative z-20 font-headline text-3xl sm:text-4xl md:text-6xl lg:text-7xl uppercase text-cream mb-5 md:mb-6 px-2"
             >
               <TypewriterText
                 text="YOUR PHONE FINALLY PAYS"
